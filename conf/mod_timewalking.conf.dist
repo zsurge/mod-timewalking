@@ -1,0 +1,9 @@
+﻿# mod-timewalking skeleton notes
+# Map ID: 960 (Molten Core Timewalking) — DirectoryName MoltenCore (reuse map 409 assets)
+# maxPlayers: 10 via MapDifficulty.dbc (RaidDuration 604800 = weekly, separate from MC 409)
+# To change raid size: edit MapDifficulty MaxPlayers for map 960, rebuild patch with tools/build_tw_dbc_mpq.py
+# Entrance NPC: 9000100 时光副本 @ Dalaran Krasus Landing 5808.50, 430.20, 658.78 (map 571)
+# Vendor NPC:   9000101 时光套装兑换 @ 5811.20, 427.80, 658.78
+# Instance parent: 230 (Blackrock Depths), same as original MC
+# ScriptName: empty this phase (boss AI follow-up)
+# Next: HP tune, ilvl 219 items, tokens, set vendor 「时光」+ original T1 name
