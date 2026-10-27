@@ -7,8 +7,8 @@ NPCs (creature):
   9000102 / guid 5300802  拍卖师 (neutral, Alliance+Horde)
 
 Gameobjects:
-  entry 191757 / guid 5300810  DK Runeforge (type 8, spellfocus 1552)
-  entry 193086 / guid 5300811  Guild Vault (type 34, Dalaran model)
+  entry 190557 / guid 5300810  DK Runeforge (Acherus, size=1, type 8 spellfocus 1552)
+  entry 193086 / guid 5300811  Guild Vault (type 34, Dalaran model; Z raised to deck)
   entry 193071 / guid 5300812  Mailbox (type 19, Dalaran model)
 """
 import math
@@ -32,8 +32,8 @@ def rot(o):
 PORTAL_XYZO = (5794.0737, 429.3953, 658.7858, 0.7693)
 VENDOR_XYZO = (5791.0757, 433.6151, 658.7834, 0.565)
 AUCTION_XYZO = (5839.514, 439.50998, 658.7835, 2.7588007)
-RUNEFORGE_XYZO = (5778.2334, 447.9638, 657.5751, 3.2261343)
-GUILD_XYZO = (5780.4478, 434.46454, 657.55396, 0.44580877)
+RUNEFORGE_XYZO = (5778.2334, 447.9638, 657.5751, 3.2261343)  # XY/O user gps; entry 190557 size=1
+GUILD_XYZO = (5780.4478, 434.46454, 658.75, 0.44580877)  # Z raised ~+1.2 onto Krasus deck (candles ~658.77)
 MAIL_XYZO = (5821.194, 414.4446, 657.58844, 1.6788778)
 
 def build_npc_sql():
@@ -140,7 +140,7 @@ def build_go_sql():
     a("SET @GUID_RUNE  := 5300810;")
     a("SET @GUID_GUILD := 5300811;")
     a("SET @GUID_MAIL  := 5300812;")
-    a("SET @ENTRY_RUNE  := 191757;  -- Runeforge type=8 spellfocus 1552")
+    a("SET @ENTRY_RUNE  := 190557;  -- Acherus Runeforge size=1 type=8 spellfocus 1552 (was 191757 size=4.92)")
     a("SET @ENTRY_GUILD := 193086;  -- Guild Vault type=34")
     a("SET @ENTRY_MAIL  := 193071;  -- Mailbox type=19")
     a("")
