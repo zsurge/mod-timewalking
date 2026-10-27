@@ -34,12 +34,12 @@ def rot(o):
 PORTAL_XYZO = (5794.0737, 429.3953, 658.7858, 0.7693)
 VENDOR_XYZO = (5791.0757, 433.6151, 658.7834, 0.565)
 AUCTION_XYZO = (5839.514, 439.50998, 658.7835, 2.7588007)
-RUNEFORGE_XYZO = (5778.2334, 447.9638, 658.85, 3.2261343)  # XY/O user gps; Z onto deck (was 657.57 buried)
-GUILD_XYZO = (5780.4478, 434.46454, 659.3, 0.44580877)  # Z raised again (658.75 -> 659.3)
+RUNEFORGE_XYZO = (5778.2334, 447.9638, 658.55, 3.2261343)  # XY/O user gps; Z lowered a touch (658.85 -> 658.55)
+GUILD_XYZO = (5780.4478, 434.46454, 659.7, 0.44580877)  # Z raised again (659.3 -> 659.7)
 MAIL_XYZO = (5821.194, 414.4446, 657.58844, 1.6788778)
-# Blacksmith pair at user gps XY/O; Z raised onto Krasus deck (~658.85). Anvil +2yd along facing.
-FORGE_XYZO = (5845.276, 458.3727, 658.85, 0.33191228)
-ANVIL_XYZO = (5847.1668, 459.0244, 658.85, 0.33191228)
+# Blacksmith pair: forge at user gps XY/O; Z 658.55; anvil ~10yd along facing o=0.3319.
+FORGE_XYZO = (5845.276, 458.3727, 658.55, 0.33191228)
+ANVIL_XYZO = (5854.7302, 461.6312, 658.55, 0.33191228)
 
 def build_npc_sql():
     L = []
