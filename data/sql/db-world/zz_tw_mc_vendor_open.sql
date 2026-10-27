@@ -18,3 +18,4 @@ DELETE FROM smart_scripts WHERE entryorguid = 9000101 AND source_type = 0;
 
 -- Optional: clear obsolete creature_text for closed state
 DELETE FROM creature_text WHERE CreatureID = 9000101 AND GroupID IN (0, 1);
+UPDATE creature_template SET AIName='' WHERE entry=9000101;
