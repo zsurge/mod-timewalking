@@ -17,7 +17,7 @@ INSERT INTO `creature_template`
 (`entry`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `faction`, `npcflag`, `unit_class`, `unit_flags`, `type`, `flags_extra`, `ScriptName`, `AIName`)
 VALUES
 (@ENTRY_PORTAL, '时光副本', '熔火之心（时光）', 'Speak', @MENU_PORTAL, 80, 80, 35, 1, 1, 2, 7, 2, '', 'SmartAI'),
-(@ENTRY_VENDOR, '时光套装兑换', '1印记+100金兑换任意部位', 'Speak', @MENU_VENDOR, 80, 80, 35, 129, 1, 2, 7, 2, '', 'SmartAI');
+(@ENTRY_VENDOR, '时光套装兑换', '', 'Speak', @MENU_VENDOR, 80, 80, 35, 129, 1, 2, 7, 2, '', 'SmartAI');
 
 DELETE FROM `creature_template_model` WHERE `CreatureID` IN (@ENTRY_PORTAL, @ENTRY_VENDOR);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`) VALUES
@@ -27,7 +27,7 @@ INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`,
 DELETE FROM `creature_template_locale` WHERE `entry` IN (@ENTRY_PORTAL, @ENTRY_VENDOR) AND `locale`='zhCN';
 INSERT INTO `creature_template_locale` (`entry`, `locale`, `Name`, `Title`, `VerifiedBuild`) VALUES
 (@ENTRY_PORTAL, 'zhCN', '时光副本', '熔火之心（时光）', 0),
-(@ENTRY_VENDOR, 'zhCN', '时光套装兑换', '1印记+100金兑换任意部位', 0);
+(@ENTRY_VENDOR, 'zhCN', '时光套装兑换', '', 0);
 
 DELETE FROM `gossip_menu` WHERE `MenuID` IN (@MENU_PORTAL, @MENU_VENDOR);
 INSERT INTO `gossip_menu` (`MenuID`, `TextID`) VALUES
