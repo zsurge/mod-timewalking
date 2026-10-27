@@ -10,6 +10,8 @@ Gameobjects:
   entry 9000103 / guid 5300810  DK Runeforge (custom: display 8176 size=1, type 8 spellfocus 1552)
   entry 193086 / guid 5300811  Guild Vault (type 34; Z raised onto Krasus deck)
   entry 193071 / guid 5300812  Mailbox (type 19, Dalaran model)
+  entry 1685 / guid 5300813  Blacksmith Forge (Dalaran stock, size=1, type 8 Data0=3)
+  entry 1684 / guid 5300814  Blacksmith's Anvil (Dalaran stock, size=1, type 8 Data0=1)
 """
 import math
 import subprocess
@@ -35,6 +37,9 @@ AUCTION_XYZO = (5839.514, 439.50998, 658.7835, 2.7588007)
 RUNEFORGE_XYZO = (5778.2334, 447.9638, 658.85, 3.2261343)  # XY/O user gps; Z onto deck (was 657.57 buried)
 GUILD_XYZO = (5780.4478, 434.46454, 659.3, 0.44580877)  # Z raised again (658.75 -> 659.3)
 MAIL_XYZO = (5821.194, 414.4446, 657.58844, 1.6788778)
+# Blacksmith pair at user gps XY/O; Z raised onto Krasus deck (~658.85). Anvil +2yd along facing.
+FORGE_XYZO = (5845.276, 458.3727, 658.85, 0.33191228)
+ANVIL_XYZO = (5847.1668, 459.0244, 658.85, 0.33191228)
 
 def build_npc_sql():
     L = []
@@ -133,16 +138,20 @@ def build_go_sql():
     L = []
     a = L.append
     a("-- zz_tw_dalaran_utility_gos.sql")
-    a("-- Dalaran Krasus Landing utility gameobjects: DK Runeforge, Guild Vault, Mailbox")
+    a("-- Dalaran Krasus Landing utility gameobjects: DK Runeforge, Guild Vault, Mailbox, Forge, Anvil")
     a("-- Idempotent. Custom runeforge 9000103 = 191757 model at size=1 (stock 191757 is size 4.92).")
     a("SET NAMES utf8mb4;")
     a("")
     a("SET @GUID_RUNE  := 5300810;")
     a("SET @GUID_GUILD := 5300811;")
     a("SET @GUID_MAIL  := 5300812;")
+    a("SET @GUID_FORGE := 5300813;")
+    a("SET @GUID_ANVIL := 5300814;")
     a("SET @ENTRY_RUNE  := 9000103;  -- custom Runeforge display 8176 size=1 type=8 spellfocus 1552")
     a("SET @ENTRY_GUILD := 193086;  -- Guild Vault type=34")
     a("SET @ENTRY_MAIL  := 193071;  -- Mailbox type=19")
+    a("SET @ENTRY_FORGE := 1685;  -- Dalaran Forge type=8 Data0=3 size=1")
+    a("SET @ENTRY_ANVIL := 1684;  -- Blacksmith's Anvil type=8 Data0=1 size=1")
     a("")
     # Custom template: same as 191757 but size=1 so it is visible and normal-scale in Dalaran.
     a("DELETE FROM " + qi("gameobject_template") + " WHERE " + qi("entry") + "=@ENTRY_RUNE;")
@@ -166,7 +175,7 @@ def build_go_sql():
     a("(@ENTRY_RUNE,'zhTW','符文熔爐','',0),")
     a("(@ENTRY_RUNE,'enUS','Runeforge','',0);")
     a("")
-    a("DELETE FROM " + qi("gameobject") + " WHERE " + qi("guid") + " IN (@GUID_RUNE, @GUID_GUILD, @GUID_MAIL);")
+    a("DELETE FROM " + qi("gameobject") + " WHERE " + qi("guid") + " IN (@GUID_RUNE, @GUID_GUILD, @GUID_MAIL, @GUID_FORGE, @GUID_ANVIL);")
     a("INSERT INTO " + qi("gameobject"))
     a("(" + ",".join(qi(c) for c in [
         "guid", "id", "map", "zoneId", "areaId", "spawnMask", "phaseMask",
@@ -179,6 +188,8 @@ def build_go_sql():
         ("@GUID_RUNE", "@ENTRY_RUNE", RUNEFORGE_XYZO, 100, 1),
         ("@GUID_GUILD", "@ENTRY_GUILD", GUILD_XYZO, 100, 1),
         ("@GUID_MAIL", "@ENTRY_MAIL", MAIL_XYZO, 255, 1),
+        ("@GUID_FORGE", "@ENTRY_FORGE", FORGE_XYZO, 100, 1),
+        ("@GUID_ANVIL", "@ENTRY_ANVIL", ANVIL_XYZO, 100, 1),
     ]:
         x, y, z, o = xyzo
         r0, r1, r2, r3 = rot(o)
@@ -207,7 +218,7 @@ def main():
         "SELECT entry,name,subname,faction,npcflag FROM creature_template WHERE entry IN (9000100,9000101,9000102);"
         "SELECT guid,id,ROUND(position_x,2),ROUND(position_y,2),ROUND(position_z,2),ROUND(orientation,3) FROM creature WHERE guid IN (5300800,5300801,5300802);"
         "SELECT g.guid,g.id,t.name,t.size,t.type,t.Data0,ROUND(g.position_x,2),ROUND(g.position_y,2),ROUND(g.position_z,2) "
-        "FROM gameobject g JOIN gameobject_template t ON g.id=t.entry WHERE g.guid IN (5300810,5300811,5300812); SELECT entry,name,displayId,size,type,Data0 FROM gameobject_template WHERE entry=9000103;"],
+        "FROM gameobject g JOIN gameobject_template t ON g.id=t.entry WHERE g.guid IN (5300810,5300811,5300812,5300813,5300814); SELECT entry,name,displayId,size,type,Data0 FROM gameobject_template WHERE entry IN (9000103,1685,1684);"],
         capture_output=True)
     print(r.stdout.decode("utf-8", "replace"))
     if rc1 or rc2 or r.returncode:
