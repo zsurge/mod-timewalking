@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """Generate Timewalking MC ilvl-219 loot: T1-look sets, non-set clones, tokens, vendor, ItemSet.dbc."""
 import os, struct, subprocess, shutil
 
@@ -20,24 +20,24 @@ T1_SETS = list(range(201, 210))
 # InventoryType -> token index 1..8
 SLOT_TOKEN = {1:1, 3:2, 5:3, 20:3, 9:4, 10:5, 6:6, 7:7, 8:8}
 TOKEN_NAMES_EN = {
-    1: "Timewalking Set Token: Head",
-    2: "Timewalking Set Token: Shoulder",
-    3: "Timewalking Set Token: Chest",
-    4: "Timewalking Set Token: Wrist",
-    5: "Timewalking Set Token: Hands",
-    6: "Timewalking Set Token: Waist",
-    7: "Timewalking Set Token: Legs",
-    8: "Timewalking Set Token: Feet",
+    1: "Molten Timewalking Sigil: Head",
+    2: "Molten Timewalking Sigil: Shoulder",
+    3: "Molten Timewalking Sigil: Chest",
+    4: "Molten Timewalking Sigil: Wrist",
+    5: "Molten Timewalking Sigil: Hands",
+    6: "Molten Timewalking Sigil: Waist",
+    7: "Molten Timewalking Sigil: Legs",
+    8: "Molten Timewalking Sigil: Feet",
 }
 TOKEN_NAMES_ZH = {
-    1: "\u65f6\u5149\u5957\u88c5\u4ee3\u5e01\uff1a\u5934\u90e8",
-    2: "\u65f6\u5149\u5957\u88c5\u4ee3\u5e01\uff1a\u80a9\u90e8",
-    3: "\u65f6\u5149\u5957\u88c5\u4ee3\u5e01\uff1a\u80f8\u90e8",
-    4: "\u65f6\u5149\u5957\u88c5\u4ee3\u5e01\uff1a\u624b\u8155",
-    5: "\u65f6\u5149\u5957\u88c5\u4ee3\u5e01\uff1a\u624b\u90e8",
-    6: "\u65f6\u5149\u5957\u88c5\u4ee3\u5e01\uff1a\u8170\u90e8",
-    7: "\u65f6\u5149\u5957\u88c5\u4ee3\u5e01\uff1a\u817f\u90e8",
-    8: "\u65f6\u5149\u5957\u88c5\u4ee3\u5e01\uff1a\u811a\u90e8",
+    1: "\u7194\u706b\u65f6\u5149\u5370\u8bb0\uff1a\u5934\u90e8",
+    2: "\u7194\u706b\u65f6\u5149\u5370\u8bb0\uff1a\u80a9\u90e8",
+    3: "\u7194\u706b\u65f6\u5149\u5370\u8bb0\uff1a\u80f8\u90e8",
+    4: "\u7194\u706b\u65f6\u5149\u5370\u8bb0\uff1a\u624b\u8155",
+    5: "\u7194\u706b\u65f6\u5149\u5370\u8bb0\uff1a\u624b\u90e8",
+    6: "\u7194\u706b\u65f6\u5149\u5370\u8bb0\uff1a\u8170\u90e8",
+    7: "\u7194\u706b\u65f6\u5149\u5370\u8bb0\uff1a\u817f\u90e8",
+    8: "\u7194\u706b\u65f6\u5149\u5370\u8bb0\uff1a\u811a\u90e8",
 }
 TW_SUFFIX = "\uff08\u65f6\u5149\uff09"
 SET_NAME_EN = {
