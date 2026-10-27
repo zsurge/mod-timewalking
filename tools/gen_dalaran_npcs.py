@@ -7,8 +7,8 @@ NPCs (creature):
   9000102 / guid 5300802  拍卖师 (neutral, Alliance+Horde)
 
 Gameobjects:
-  entry 190557 / guid 5300810  DK Runeforge (Acherus, size=1, type 8 spellfocus 1552)
-  entry 193086 / guid 5300811  Guild Vault (type 34, Dalaran model; Z raised to deck)
+  entry 9000103 / guid 5300810  DK Runeforge (custom: display 8176 size=1, type 8 spellfocus 1552)
+  entry 193086 / guid 5300811  Guild Vault (type 34; Z raised onto Krasus deck)
   entry 193071 / guid 5300812  Mailbox (type 19, Dalaran model)
 """
 import math
@@ -32,8 +32,8 @@ def rot(o):
 PORTAL_XYZO = (5794.0737, 429.3953, 658.7858, 0.7693)
 VENDOR_XYZO = (5791.0757, 433.6151, 658.7834, 0.565)
 AUCTION_XYZO = (5839.514, 439.50998, 658.7835, 2.7588007)
-RUNEFORGE_XYZO = (5778.2334, 447.9638, 657.5751, 3.2261343)  # XY/O user gps; entry 190557 size=1
-GUILD_XYZO = (5780.4478, 434.46454, 658.75, 0.44580877)  # Z raised ~+1.2 onto Krasus deck (candles ~658.77)
+RUNEFORGE_XYZO = (5778.2334, 447.9638, 658.85, 3.2261343)  # XY/O user gps; Z onto deck (was 657.57 buried)
+GUILD_XYZO = (5780.4478, 434.46454, 659.3, 0.44580877)  # Z raised again (658.75 -> 659.3)
 MAIL_XYZO = (5821.194, 414.4446, 657.58844, 1.6788778)
 
 def build_npc_sql():
@@ -134,15 +134,37 @@ def build_go_sql():
     a = L.append
     a("-- zz_tw_dalaran_utility_gos.sql")
     a("-- Dalaran Krasus Landing utility gameobjects: DK Runeforge, Guild Vault, Mailbox")
-    a("-- Idempotent. Stock WotLK entries.")
+    a("-- Idempotent. Custom runeforge 9000103 = 191757 model at size=1 (stock 191757 is size 4.92).")
     a("SET NAMES utf8mb4;")
     a("")
     a("SET @GUID_RUNE  := 5300810;")
     a("SET @GUID_GUILD := 5300811;")
     a("SET @GUID_MAIL  := 5300812;")
-    a("SET @ENTRY_RUNE  := 190557;  -- Acherus Runeforge size=1 type=8 spellfocus 1552 (was 191757 size=4.92)")
+    a("SET @ENTRY_RUNE  := 9000103;  -- custom Runeforge display 8176 size=1 type=8 spellfocus 1552")
     a("SET @ENTRY_GUILD := 193086;  -- Guild Vault type=34")
     a("SET @ENTRY_MAIL  := 193071;  -- Mailbox type=19")
+    a("")
+    # Custom template: same as 191757 but size=1 so it is visible and normal-scale in Dalaran.
+    a("DELETE FROM " + qi("gameobject_template") + " WHERE " + qi("entry") + "=@ENTRY_RUNE;")
+    a("INSERT INTO " + qi("gameobject_template") + " (" + ",".join(qi(c) for c in [
+        "entry", "type", "displayId", "name", "IconName", "castBarCaption", "unk1", "size",
+        "Data0", "Data1", "Data2", "Data3", "Data4", "Data5", "Data6", "Data7", "Data8", "Data9", "Data10",
+        "Data11", "Data12", "Data13", "Data14", "Data15", "Data16", "Data17", "Data18", "Data19", "Data20",
+        "Data21", "Data22", "Data23", "AIName", "ScriptName", "VerifiedBuild"]) + ")")
+    a("VALUES")
+    a("(@ENTRY_RUNE,8,8176,'Runeforge','','','',1,1552,15,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,'','',0);")
+    a("")
+    a("DELETE FROM " + qi("gameobject_template_addon") + " WHERE " + qi("entry") + "=@ENTRY_RUNE;")
+    a("INSERT INTO " + qi("gameobject_template_addon") + " (" + ",".join(qi(c) for c in [
+        "entry", "faction", "flags", "mingold", "maxgold", "artkit0", "artkit1", "artkit2", "artkit3"]) + ")")
+    a("VALUES (@ENTRY_RUNE,0,32,0,0,0,0,0,0);")
+    a("")
+    a("DELETE FROM " + qi("gameobject_template_locale") + " WHERE " + qi("entry") + "=@ENTRY_RUNE;")
+    a("INSERT INTO " + qi("gameobject_template_locale") + " (" + ",".join(qi(c) for c in [
+        "entry", "locale", "name", "castBarCaption", "VerifiedBuild"]) + ") VALUES")
+    a("(@ENTRY_RUNE,'zhCN','符文熔炉','',0),")
+    a("(@ENTRY_RUNE,'zhTW','符文熔爐','',0),")
+    a("(@ENTRY_RUNE,'enUS','Runeforge','',0);")
     a("")
     a("DELETE FROM " + qi("gameobject") + " WHERE " + qi("guid") + " IN (@GUID_RUNE, @GUID_GUILD, @GUID_MAIL);")
     a("INSERT INTO " + qi("gameobject"))
@@ -184,8 +206,8 @@ def main():
     r = subprocess.run(MYSQL[:-1] + ["-N", MYSQL[-1], "-e",
         "SELECT entry,name,subname,faction,npcflag FROM creature_template WHERE entry IN (9000100,9000101,9000102);"
         "SELECT guid,id,ROUND(position_x,2),ROUND(position_y,2),ROUND(position_z,2),ROUND(orientation,3) FROM creature WHERE guid IN (5300800,5300801,5300802);"
-        "SELECT g.guid,g.id,t.name,t.type,ROUND(g.position_x,2),ROUND(g.position_y,2),ROUND(g.position_z,2) "
-        "FROM gameobject g JOIN gameobject_template t ON g.id=t.entry WHERE g.guid IN (5300810,5300811,5300812);"],
+        "SELECT g.guid,g.id,t.name,t.size,t.type,t.Data0,ROUND(g.position_x,2),ROUND(g.position_y,2),ROUND(g.position_z,2) "
+        "FROM gameobject g JOIN gameobject_template t ON g.id=t.entry WHERE g.guid IN (5300810,5300811,5300812); SELECT entry,name,displayId,size,type,Data0 FROM gameobject_template WHERE entry=9000103;"],
         capture_output=True)
     print(r.stdout.decode("utf-8", "replace"))
     if rc1 or rc2 or r.returncode:
