@@ -155,13 +155,14 @@ print("item_template cols", len(cols))
 # T1 set pieces
 t1_pieces = []
 for line in q(
-    "SELECT entry, name, InventoryType, class, subclass, itemset FROM item_template "
+    "SELECT entry, name, InventoryType, class, subclass, itemset, AllowableClass FROM item_template "
     "WHERE itemset BETWEEN 201 AND 209 ORDER BY itemset, InventoryType"
 ).strip().splitlines():
-    e, name, inv, cls, sub, iset = line.split("\t")
+    e, name, inv, cls, sub, iset, acm = line.split("	")
     t1_pieces.append({
         "entry": int(e), "name": name, "InventoryType": int(inv),
         "class": int(cls), "subclass": int(sub), "itemset": int(iset),
+        "AllowableClass": int(acm),
     })
 print("T1 pieces", len(t1_pieces))
 
