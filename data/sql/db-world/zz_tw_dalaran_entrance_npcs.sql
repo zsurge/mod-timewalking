@@ -17,7 +17,7 @@ INSERT INTO `creature_template`
 (`entry`, `name`, `subname`, `IconName`, `gossip_menu_id`, `minlevel`, `maxlevel`, `faction`, `npcflag`, `unit_class`, `unit_flags`, `type`, `flags_extra`, `ScriptName`, `AIName`)
 VALUES
 (@ENTRY_PORTAL, '时光副本', '熔火之心（时光）', 'Speak', @MENU_PORTAL, 80, 80, 35, 1, 1, 2, 7, 2, '', 'SmartAI'),
-(@ENTRY_VENDOR, '时光套装兑换', '代币换装（占位）', 'Speak', @MENU_VENDOR, 80, 80, 35, 1, 1, 2, 7, 2, '', 'SmartAI');
+(@ENTRY_VENDOR, '时光套装兑换', '1印记+100金兑换任意部位', 'Speak', @MENU_VENDOR, 80, 80, 35, 129, 1, 2, 7, 2, '', 'SmartAI');
 
 DELETE FROM `creature_template_model` WHERE `CreatureID` IN (@ENTRY_PORTAL, @ENTRY_VENDOR);
 INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`, `DisplayScale`, `Probability`) VALUES
@@ -27,7 +27,7 @@ INSERT INTO `creature_template_model` (`CreatureID`, `Idx`, `CreatureDisplayID`,
 DELETE FROM `creature_template_locale` WHERE `entry` IN (@ENTRY_PORTAL, @ENTRY_VENDOR) AND `locale`='zhCN';
 INSERT INTO `creature_template_locale` (`entry`, `locale`, `Name`, `Title`, `VerifiedBuild`) VALUES
 (@ENTRY_PORTAL, 'zhCN', '时光副本', '熔火之心（时光）', 0),
-(@ENTRY_VENDOR, 'zhCN', '时光套装兑换', '代币换装（占位）', 0);
+(@ENTRY_VENDOR, 'zhCN', '时光套装兑换', '1印记+100金兑换任意部位', 0);
 
 DELETE FROM `gossip_menu` WHERE `MenuID` IN (@MENU_PORTAL, @MENU_VENDOR);
 INSERT INTO `gossip_menu` (`MenuID`, `TextID`) VALUES
@@ -40,14 +40,11 @@ INSERT INTO `gossip_menu_option`
 VALUES
 (@MENU_PORTAL, 0, 0, '进入熔火之心（时光）', 0, 1, 1, 0, 0, 0, 0, NULL, 0),
 (@MENU_PORTAL, 1, 0, '了解时光副本（说明）', 0, 1, 1, 0, 0, 0, 0, NULL, 0),
-(@MENU_VENDOR, 0, 0, '兑换时光套装（尚未开放）', 0, 1, 1, 0, 0, 0, 0, NULL, 0),
-(@MENU_VENDOR, 1, 0, '说明：Boss 掉代币，按部位兑换「时光」+原T1名', 0, 1, 1, 0, 0, 0, 0, NULL, 0);
+(@MENU_VENDOR, 0, 1, '购买时光套装', 0, 3, 1, 0, 0, 0, 0, NULL, 0);
 
 DELETE FROM `creature_text` WHERE `CreatureID` IN (@ENTRY_PORTAL, @ENTRY_VENDOR);
 INSERT INTO `creature_text` (`CreatureID`, `GroupID`, `ID`, `Text`, `Type`, `Language`, `Probability`, `Emote`, `Duration`, `Sound`, `BroadcastTextId`, `TextRange`, `comment`) VALUES
-(@ENTRY_PORTAL, 0, 0, '时光熔火之心：10 人团本，装等目标 219，周锁。Boss 脚本与 219 掉落下一阶段再做。', 12, 0, 100, 1, 0, 0, 0, 0, 'TW portal help'),
-(@ENTRY_VENDOR, 0, 0, '套装兑换尚未开放。计划：Boss 掉 219 散件 + 代币，按部位兑换「时光」+ 原 T1 套装名。', 12, 0, 100, 1, 0, 0, 0, 0, 'TW vendor help'),
-(@ENTRY_VENDOR, 1, 0, '兑换功能占位中，请稍后再来。', 12, 0, 100, 1, 0, 0, 0, 0, 'TW vendor not open');
+(@ENTRY_PORTAL, 0, 0, '时光熔火之心：10 人团本，装等目标 219，周锁。Boss 脚本与 219 掉落下一阶段再做。', 12, 0, 100, 1, 0, 0, 0, 0, 'TW portal help');
 
 DELETE FROM `smart_scripts` WHERE `entryorguid` IN (@ENTRY_PORTAL, @ENTRY_VENDOR) AND `source_type`=0;
 INSERT INTO `smart_scripts`
@@ -56,11 +53,7 @@ VALUES
 (@ENTRY_PORTAL,0,0,1,62,0,100,0,@MENU_PORTAL,0,0,0,0,0,62,960,0,0,0,0,0,7,0,0,0,0,1091.89,-466.985,-105.084,3.14159,'TW Portal - Enter TW MC'),
 (@ENTRY_PORTAL,0,1,0,61,0,100,0,0,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,'TW Portal - Close'),
 (@ENTRY_PORTAL,0,2,3,62,0,100,0,@MENU_PORTAL,1,0,0,0,0,1,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,'TW Portal - Help text'),
-(@ENTRY_PORTAL,0,3,0,61,0,100,0,0,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,'TW Portal - Close help'),
-(@ENTRY_VENDOR,0,0,1,62,0,100,0,@MENU_VENDOR,0,0,0,0,0,1,1,0,0,0,0,0,7,0,0,0,0,0,0,0,0,'TW Vendor - Not open text'),
-(@ENTRY_VENDOR,0,1,0,61,0,100,0,0,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,'TW Vendor - Close'),
-(@ENTRY_VENDOR,0,2,3,62,0,100,0,@MENU_VENDOR,1,0,0,0,0,1,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,'TW Vendor - Spec text'),
-(@ENTRY_VENDOR,0,3,0,61,0,100,0,0,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,'TW Vendor - Close help');
+(@ENTRY_PORTAL,0,3,0,61,0,100,0,0,0,0,0,0,0,72,0,0,0,0,0,0,7,0,0,0,0,0,0,0,0,'TW Portal - Close help');
 
 DELETE FROM `creature` WHERE `guid` IN (@GUID_PORTAL, @GUID_VENDOR) OR `id` IN (@ENTRY_PORTAL, @ENTRY_VENDOR);
 INSERT INTO `creature`
