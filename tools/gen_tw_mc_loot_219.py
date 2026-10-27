@@ -377,6 +377,14 @@ L.append(
     f"{','.join(str(tw_item(i)) for i in nons)});"
 )
 L.append("")
+L.append("-- Prefer zhCN as item_template.name so set tooltips are Chinese")
+L.append(
+    "UPDATE `item_template` it "
+    "INNER JOIN `item_template_locale` itl ON itl.`ID`=it.`entry` AND itl.`locale`='zhCN' "
+    "SET it.`name`=itl.`Name` "
+    "WHERE it.`itemset` BETWEEN 9201 AND 9209;"
+)
+L.append("")
 
 # ---- itemset_dbc rows (server) ----
 L.append("-- itemset_dbc (server). Client ItemSet.dbc written by this script separately.")
