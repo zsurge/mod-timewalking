@@ -150,7 +150,7 @@ for oid in boss_oids:
         elif c == "DamageModifier":
             exprs.append(str(dm))
         elif c in ("lootid", "pickpocketloot", "skinloot", "mingold", "maxgold"):
-            exprs.append("0")
+            exprs.append(f"`{c}`")  # keep original loot until 219 tables exist
         elif c == "name":
             exprs.append("CONCAT(`name`,'（时光）')")
         else:
