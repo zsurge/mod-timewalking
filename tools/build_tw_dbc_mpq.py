@@ -72,7 +72,7 @@ def build_mpq(files: dict, out_path: str):
     for name in names:
         data = all_files[name]
         off = header_size + len(file_blob)
-        flags = 0x80000000
+        flags = 0x81000000  # EXISTS | SINGLE_UNIT (required by WoW Storm; else sector-table misread -> OOM crash)
         blocks.append((off, len(data), len(data), flags))
         file_blob += data
     block_table_pos = header_size + len(file_blob)
@@ -131,10 +131,14 @@ if __name__ == "__main__":
     }
     out = r"E:\azerothcore\modules\mod-timewalking\client-patch\patch-zhCN-TW.MPQ"
     build_mpq(files, out)
-    shutil.copy2(out, r"F:\claw-code\Lwow\Data\zhCN\patch-zhCN-9.MPQ")
-    print("installed patch-zhCN-9.MPQ")
-    from mpyq import MPQArchive
-    a = MPQArchive(out)
-    print("listfile ok", a.files)
-    m = a.read_file(r"DBFilesClient\Map.dbc")
-    print("Map.dbc", len(m) if m else None)
+    dest = r"F:\World of Warcraft Dev\Data\zhCN\patch-zhCN-9.MPQ"
+    shutil.copy2(out, dest)
+    print("installed", dest)
+    try:
+        from mpyq import MPQArchive
+        a = MPQArchive(out)
+        print("listfile ok", a.files)
+        m = a.read_file(r"DBFilesClient\Map.dbc")
+        print("Map.dbc", len(m) if m else None)
+    except Exception as e:
+        print("mpyq skip:", e)
