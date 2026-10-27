@@ -486,6 +486,20 @@ for p in t1_pieces:
     )
     slot += 1
 L.append("")
+L.append("-- Vendor class filter: only show own-class set pieces (CONDITION_CLASS = class mask)")
+L.append("DELETE FROM `conditions` WHERE `SourceTypeOrReferenceId`=23 AND `SourceGroup`=9000101;")
+for p in t1_pieces:
+    nid = tw_item(p["entry"])
+    acm = p["AllowableClass"]
+    # escape name for comment
+    cmt = ("TW vendor class filter: " + p["name"]).replace("'", "''")
+    L.append(
+        "INSERT INTO `conditions` (`SourceTypeOrReferenceId`,`SourceGroup`,`SourceEntry`,`SourceId`,`ElseGroup`,"
+        "`ConditionTypeOrReference`,`ConditionTarget`,`ConditionValue1`,`ConditionValue2`,`ConditionValue3`,"
+        "`NegativeCondition`,`ErrorType`,`ErrorTextId`,`ScriptName`,`Comment`) VALUES "
+        f"(23,9000101,{nid},0,0,15,0,{acm},0,0,0,0,0,'','{cmt}');"
+    )
+L.append("")
 
 os.makedirs(os.path.dirname(OUT_SQL), exist_ok=True)
 with open(OUT_SQL, "w", encoding="utf-8", newline="\n") as f:
